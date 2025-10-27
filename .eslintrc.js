@@ -24,7 +24,8 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint'],
   rules: {
-    '@typescript-eslint/no-var-requires': 'off' // 你的规则配置
+    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/no-explicit-any': 'off' // 你的规则配置
   },
   overrides: [
     // 覆盖规则配置
