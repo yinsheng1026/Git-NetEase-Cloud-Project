@@ -55,7 +55,11 @@ const AppHeader: FC<IProps> = () => {
         </HeaderLeft>
         <HeaderRight>
           <span className="input">
-            <Input placeholder="default size" prefix={<SearchOutlined />} />
+            <Input
+              className="search"
+              placeholder="音乐/视频/电台/用户"
+              prefix={<SearchOutlined />}
+            />
           </span>
           <span className="center">创作者中心</span>
           <span className="login">登录</span>

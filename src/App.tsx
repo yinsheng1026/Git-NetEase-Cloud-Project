@@ -6,7 +6,7 @@ import AppFooter from './components/app-footer'
 
 function App() {
   const element = useRoutes(routes)
-  
+
   return (
     <div className="App">
       <AppHeader />
