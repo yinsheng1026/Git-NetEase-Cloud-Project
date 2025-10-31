@@ -13,13 +13,15 @@ interface IProps {
 const NavBar: FC<IProps> = () => {
   return (
     <NavWrapper>
-      {discoverMenu.map((item) => {
-        return (
-          <div className="item" key={item.link}>
-            <NavLink to={item.link}>{item.link}</NavLink>
-          </div>
-        )
-      })}
+      <div className="nav wrap-v1">
+        {discoverMenu.map((item) => {
+          return (
+            <div className="item" key={item.link}>
+              <NavLink to={item.link}>{item.title}</NavLink>
+            </div>
+          )
+        })}
+      </div>
     </NavWrapper>
   )
 }

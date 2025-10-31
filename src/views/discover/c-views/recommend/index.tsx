@@ -1,52 +1,24 @@
-//模板
-import ysRequest from '@/service'
-import React, { memo, useEffect, useState } from 'react'
+import { useAppDispatch } from '@/store'
+import React, { memo, useEffect } from 'react'
 import type { FC, ReactNode } from 'react'
+import { fetchBannerDataAction } from './store/recommend'
+import TopBanner from './c-cpns/top-banner'
 
 interface IProps {
   children?: ReactNode
 }
 
-export interface IBanner {
-  imageUrl: string
-  targetId: number
-  targetType: number
-  titleColor: string
-  typeTitle: string
-  url: string
-  exclusive: boolean
-  scm: string
-  bannerBizType: string
-}
-
 const Recommend: FC<IProps> = () => {
-  const [banners, setBanners] = useState<IBanner[]>([])
+  const dispatch = useAppDispatch()
   useEffect(() => {
-    ysRequest
-      .get({
-        url: '/banner'
-      })
-      .then((res) => setBanners(res.data.banners))
+    dispatch(fetchBannerDataAction())
   }, [])
   return (
     <div>
-      {banners.map((item, index) => {
-        return <div key={index}>{item.imageUrl}</div>
-      })}
+      <TopBanner />
+      Recommend
     </div>
   )
 }
-
-// const Recommend: FC<IProps> = () => {
-//   const [banners, setBanners] = useState<IBanner[]>([])
-//   useEffect(() => {
-//     ysRequest
-//       .get({
-//         url: '/banner'
-//       })
-//       .then((res) => console.log(res))
-//   }, [])
-//   return <div>Recommend</div>
-// }
 
 export default memo(Recommend)
