@@ -5,3 +5,12 @@ export function getBanner() {
     url: '/banner'
   })
 }
+
+export function getHotRecommend(limit = 30) {
+  return ysRequest.get({
+    url: '/personalized',
+    params: {
+      limit
+    }
+  })
+}
