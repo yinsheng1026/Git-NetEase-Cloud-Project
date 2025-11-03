@@ -12,6 +12,7 @@ export const AlbumWrapper = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative; /* 新增：为绝对定位子元素提供参照 */
 
     .arrow {
       width: 17px;
@@ -32,9 +33,23 @@ export const AlbumWrapper = styled.div`
         background-position: -320px -75px;
       }
     }
+
+    .banner {
+      overflow: hidden;
+      position: absolute;
+
+      left: 30px; /* 为左箭头留出空间 */
+      right: 30px; /* 为右箭头留出空间 */
+      top: 50%;
+      transform: translateY(-50%);
+      height: 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 
-  .album {
+  /* .album {
     width: 640px;
     height: 150px;
 
@@ -48,5 +63,5 @@ export const AlbumWrapper = styled.div`
       justify-content: space-between;
       align-items: center;
     }
-  }
+  } */
 `
