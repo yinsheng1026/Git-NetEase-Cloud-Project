@@ -36,16 +36,22 @@ export const AlbumWrapper = styled.div`
 
     .banner {
       overflow: hidden;
+      flex: 1;
       position: absolute;
-
-      left: 30px; /* 为左箭头留出空间 */
-      right: 30px; /* 为右箭头留出空间 */
+      left: 30px;
+      right: 30px;
       top: 50%;
       transform: translateY(-50%);
       height: 150px;
-      display: flex;
+      display: block;
       justify-content: center;
       align-items: center;
+
+      .album-list {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
     }
   }
 

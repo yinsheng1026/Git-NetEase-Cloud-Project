@@ -14,6 +14,8 @@ export const RecommendWrapper = styled.div`
 
     > .right {
       margin-left: 1px;
+      margin-right: 6px;
+      margin-top: 2px;
       width: 250px;
     }
   }

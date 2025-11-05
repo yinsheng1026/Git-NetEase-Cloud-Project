@@ -14,3 +14,30 @@ export function getHotRecommend(limit = 30) {
     }
   })
 }
+
+export function getNewAlbum(limit = 10) {
+  return ysRequest.get({
+    url: '/album/newest',
+    params: {
+      limit
+    }
+  })
+}
+
+export function getPlaylistDetail(id: number) {
+  return ysRequest.get({
+    url: '/playlist/detail',
+    params: {
+      id
+    }
+  })
+}
+
+export function getArtistList(limit = 5) {
+  return ysRequest.get({
+    url: '/artist/list',
+    params: {
+      limit
+    }
+  })
+}

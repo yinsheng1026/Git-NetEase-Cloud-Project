@@ -11,3 +11,11 @@ export function getImageSize(
 ) {
   return imgeUrl + `?param=${height}×${wide}`
 }
+
+export function getImageSize_right(
+  imgeUrl: string,
+  wide: number,
+  height: number = wide
+) {
+  return imgeUrl + `?param=${height}y${wide}`
+}
