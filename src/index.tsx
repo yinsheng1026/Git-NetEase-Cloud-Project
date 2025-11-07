@@ -17,7 +17,26 @@ const root = createRoot(container)
 root.render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
-      <ConfigProvider>
+      <ConfigProvider
+        theme={{
+          components: {
+            Slider: {
+              // 手柄颜色 - 设置为白色
+              handleColor: '#ffffff',
+
+              // 激活状态手柄颜色 - 也设置为白色
+              handleActiveColor: '#8a0b0b',
+
+              // 边框颜色 - 设置为红色
+              handleLineWidth: 2, // 边框宽度2px
+              handleLineWidthHover: 3 // 悬停时边框宽度2.5px
+
+              // 如果需要设置边框颜色，可能需要结合其他属性
+              // 或者通过CSS覆盖（见下方补充方案）
+            }
+          }
+        }}
+      >
         <HashRouter>
           <App />
         </HashRouter>
