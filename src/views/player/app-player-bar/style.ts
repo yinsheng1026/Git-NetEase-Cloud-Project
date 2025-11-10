@@ -23,7 +23,7 @@ export const PlayerBarWrpper = styled.div`
 //左边播放控制相关
 interface IBarControl {
   // 储存是否播放状态
-  isPlaying: boolean
+  $isPlaying: boolean
 }
 export const BarControl = styled.div<IBarControl>`
   display: flex; // 启用弹性布局，子元素水平排列
@@ -48,7 +48,8 @@ export const BarControl = styled.div<IBarControl>`
     width: 36px; // 播放按钮宽度36px，比前后按钮稍大
     height: 36px; // 播放按钮高度36px
     margin: 0 8px; // 左右外边距各8px，与前后按钮保持间距
-    background-position: 0 ${(props) => (props.isPlaying ? '-165px' : '-204px')}; // 根据播放状态动态切换背景图位置
+    background-position: 0
+      ${(props) => (props.$isPlaying ? '-165px' : '-204px')}; // 根据播放状态动态切换背景图位置
   }
 
   .next {
@@ -107,7 +108,7 @@ export const BarPlayInfo = styled.div`
         }
         .ant-slider-handle {
           border: none;
-          margin-top: 0px;
+          margin-top: 1.5px;
         }
       }
       .time {
@@ -123,7 +124,7 @@ export const BarPlayInfo = styled.div`
 `
 //右边的控制
 interface IBarOperator {
-  playMode: number
+  $playMode: number
 }
 export const BarOperator = styled.div<IBarOperator>`
   display: flex;
@@ -166,7 +167,7 @@ export const BarOperator = styled.div<IBarOperator>`
 
     .loop {
       background-position: ${(props) => {
-        switch (props.playMode) {
+        switch (props.$playMode) {
           case 1:
             return '-66px -248px'
           case 2:

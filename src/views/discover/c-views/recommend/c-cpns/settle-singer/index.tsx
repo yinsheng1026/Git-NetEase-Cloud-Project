@@ -6,15 +6,19 @@ import { SingerWarpper } from './style'
 import AreaHeaderV2 from '@/components/area-header-v2'
 import { UseAppSelect } from '@/store'
 import { getImageSize_right } from '@/utils/format'
+import { shallowEqual } from 'react-redux'
 
 interface IProps {
   children?: ReactNode
 }
 
 const SettleSinger: FC<IProps> = () => {
-  const { settleSinger } = UseAppSelect((state) => ({
-    settleSinger: state.recommend.settleSingers
-  }))
+  const { settleSinger } = UseAppSelect(
+    (state) => ({
+      settleSinger: state.recommend.settleSingers
+    }),
+    shallowEqual
+  )
   return (
     <SingerWarpper>
       <AreaHeaderV2
