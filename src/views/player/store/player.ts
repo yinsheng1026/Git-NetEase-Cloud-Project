@@ -13,9 +13,8 @@ export const fetchCurrentSongAction = createAsyncThunk(
 
     getSongLyric(id).then((res) => {
       const lyricString = res.data.lrc.lyric
-      //格式为：要进行解析
-      // [00:09.09]粤语词：张健晖
-      // [00:12.21]原唱：蔡依林
+      // 此时获取到的为用换行符分割的长字符串
+      //对其进行格式化后获取到的是元素为对象的数组
       const lyrics = parseLyric(lyricString)
       dispatch(changeLyricsAction(lyrics))
     })
@@ -25,11 +24,13 @@ export const fetchCurrentSongAction = createAsyncThunk(
 interface IPlayerState {
   currentSong: any
   lyrics: ILyricInfo[]
+  lyricIndex: number
 }
 
 const initialState: IPlayerState = {
   currentSong: {},
-  lyrics: []
+  lyrics: [],
+  lyricIndex: -1
 }
 
 const playSlice = createSlice({
@@ -41,9 +42,17 @@ const playSlice = createSlice({
     },
     changeLyricsAction(state, { payload }) {
       state.lyrics = payload
+    },
+    //保存歌词索引
+    changeLyricIndexAction(state, { payload }) {
+      state.lyricIndex = payload
     }
   }
 })
 
 export default playSlice.reducer
-export const { changeCurrentSongAction, changeLyricsAction } = playSlice.actions
+export const {
+  changeCurrentSongAction,
+  changeLyricsAction,
+  changeLyricIndexAction
+} = playSlice.actions

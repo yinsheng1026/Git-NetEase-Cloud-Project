@@ -5,9 +5,11 @@ import type { FC, ReactNode } from 'react'
 import { BarControl, BarOperator, BarPlayInfo, PlayerBarWrpper } from './style'
 import { Link } from 'react-router-dom'
 import { Slider } from 'antd'
-import { UseAppSelect } from '@/store'
+import { useAppDispatch, UseAppSelect } from '@/store'
 import { formatTime, getImageSize } from '@/utils/format'
 import { getPlayerUrl } from '@/utils/handle-player'
+import { shallowEqual } from 'react-redux'
+import { changeLyricIndexAction } from '../store/player'
 // import { shallowEqual } from 'react-redux'
 
 interface IProps {
@@ -29,8 +31,17 @@ const AppPlayerBar: FC<IProps> = () => {
   //记录是否交互状态
   const [isChanging, setIsChanging] = useState(false) // 新增：控制状态更新
   const audioRef = useRef<HTMLAudioElement>(null)
-  const currentSong = UseAppSelect((state) => state.player.currentSong)
-
+  const { currentSong, lyrics, lyricIndex } = UseAppSelect(
+    (state) => ({
+      currentSong: state.player.currentSong,
+      //获取歌词
+      lyrics: state.player.lyrics,
+      lyricIndex: state.player.lyricIndex
+    }),
+    //只有发生改变才获取该值
+    shallowEqual
+  )
+  const dispatch = useAppDispatch()
   useEffect(() => {
     if (!audioRef.current) return
     audioRef.current.src = getPlayerUrl(currentSong.id)
@@ -65,6 +76,20 @@ const AppPlayerBar: FC<IProps> = () => {
       setProgress(progress)
       setCurrenttime(currentTime)
     }
+    //歌词追踪逻辑
+    let index = lyrics.length - 1 //默认最后一句，避免加载不出来
+    for (let i = 0; i < lyrics.length; i++) {
+      const lyric = lyrics[i]
+      if (lyric.time > currentTime) {
+        index = i - 1
+        break
+      }
+    }
+    //避免多次赋值：
+    if (lyricIndex === index || index === -1) return
+    //当匹配上歌词索引后匹配起来（保存在slice中）
+    dispatch(changeLyricIndexAction(index))
+    // alert(lyrics[index].content)
   }
 
   function handleSliderChange(value: number): void {

@@ -6,7 +6,8 @@ import { Provider } from 'react-redux'
 import { ThemeProvider } from 'styled-components'
 import { ConfigProvider } from 'antd'
 import './assets/css/index.less'
-
+import { ConfigProvider as ArcoConfigProvider } from '@arco-design/web-react' // 导入 Arco 的 ConfigProvider
+import '@arco-design/web-react/dist/css/arco.css' // 引入 Arco 样式
 import App from '@/App'
 import store from './store'
 import theme from './assets/theme'
