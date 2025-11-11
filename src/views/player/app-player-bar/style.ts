@@ -166,6 +166,7 @@ export const BarOperator = styled.div<IBarOperator>`
     }
 
     .loop {
+      cursor: pointer;
       background-position: ${(props) => {
         switch (props.$playMode) {
           case 1:

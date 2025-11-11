@@ -57,7 +57,9 @@ export const fetchRankingDataAction = createAsyncThunk(
     // 步骤2：Promise.all 等待所有Promise完成
     Promise.all(promises).then((res) => {
       // res数组顺序与promises数组顺序严格对应
-      const playlist = res.map((item) => item.data.playlist)
+      const playlist = res
+        .filter((item) => item.playlist)
+        .map((item) => item.data.playlist)
       dispatch(changeRankingsAction(playlist))
     })
   }

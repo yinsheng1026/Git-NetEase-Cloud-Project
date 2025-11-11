@@ -9,7 +9,11 @@ import { useAppDispatch, UseAppSelect } from '@/store'
 import { formatTime, getImageSize } from '@/utils/format'
 import { getPlayerUrl } from '@/utils/handle-player'
 import { shallowEqual } from 'react-redux'
-import { changeLyricIndexAction } from '../store/player'
+import {
+  changeLyricIndexAction,
+  changeMusicAction,
+  changePlayModeAction
+} from '../store/player'
 // import { shallowEqual } from 'react-redux'
 
 interface IProps {
@@ -30,13 +34,17 @@ const AppPlayerBar: FC<IProps> = () => {
 
   //记录是否交互状态
   const [isChanging, setIsChanging] = useState(false) // 新增：控制状态更新
+
+  // const [playMode, setPlayMode] = useState(0)
+
   const audioRef = useRef<HTMLAudioElement>(null)
-  const { currentSong, lyrics, lyricIndex } = UseAppSelect(
+  const { currentSong, lyrics, lyricIndex, playMode } = UseAppSelect(
     (state) => ({
       currentSong: state.player.currentSong,
       //获取歌词
       lyrics: state.player.lyrics,
-      lyricIndex: state.player.lyricIndex
+      lyricIndex: state.player.lyricIndex,
+      playMode: state.player.playMode
     }),
     //只有发生改变才获取该值
     shallowEqual
@@ -44,17 +52,18 @@ const AppPlayerBar: FC<IProps> = () => {
   const dispatch = useAppDispatch()
   useEffect(() => {
     if (!audioRef.current) return
+    audioRef.current.volume = 0.1
     audioRef.current.src = getPlayerUrl(currentSong.id)
-    // audioRef.current
-    //   .play()
-    //   .then(() => {
-    //     console.log('播放成功')
-    //     setIsPlaying(true)
-    //   })
-    //   .catch((err) => {
-    //     console.log('播放失败:', err)
-    //     setIsPlaying(false)
-    //   })
+    audioRef.current
+      .play()
+      .then(() => {
+        console.log('播放成功')
+        setIsPlaying(true)
+      })
+      .catch((err) => {
+        console.log('播放失败:', err)
+        setIsPlaying(false)
+      })
     setDuration(currentSong.dt)
   }, [currentSong])
 
@@ -90,6 +99,7 @@ const AppPlayerBar: FC<IProps> = () => {
     //当匹配上歌词索引后匹配起来（保存在slice中）
     dispatch(changeLyricIndexAction(index))
     // alert(lyrics[index].content)
+    console.log(lyrics[index].content)
   }
 
   function handleSliderChange(value: number): void {
@@ -103,13 +113,36 @@ const AppPlayerBar: FC<IProps> = () => {
     setIsChanging(false)
   }
 
+  function handleChangePlayMode(): void {
+    let newPlayMode = playMode + 1
+    if (newPlayMode > 2) newPlayMode = 0
+    dispatch(changePlayModeAction(newPlayMode))
+  }
+
+  //上一首下一首
+  function handleChangeBtnClick(isNext = true): void {
+    dispatch(changeMusicAction(isNext))
+  }
+
+  function handleTimeEnded(): void {
+    //单曲循环时候
+    if (playMode === 2) {
+      audioRef.current!.currentTime = 0
+      audioRef.current?.play()
+    }
+    //当不是单曲循环的时候
+    else {
+      handleChangeBtnClick(true)
+    }
+  }
+
   return (
     <PlayerBarWrpper className="sprite_playbar">
       <div className="content wrap-v2">
         <BarControl $isPlaying={isPlaying}>
           <button
             className="btn sprite_playbar prev"
-            // onClick={() => handleChangeBtnClick(false)}
+            onClick={() => handleChangeBtnClick(false)}
           ></button>
           <button
             className="btn sprite_playbar play"
@@ -117,7 +150,7 @@ const AppPlayerBar: FC<IProps> = () => {
           ></button>
           <button
             className="btn sprite_playbar next"
-            // onClick={() => handleChangeBtnClick()}
+            onClick={() => handleChangeBtnClick()}
           ></button>
         </BarControl>
         <BarPlayInfo>
@@ -150,7 +183,7 @@ const AppPlayerBar: FC<IProps> = () => {
             </div>
           </div>
         </BarPlayInfo>
-        <BarOperator $playMode={1}>
+        <BarOperator $playMode={playMode}>
           <div className="left">
             <button className="btn pip"></button>
             <button className="btn sprite_playbar favor"></button>
@@ -158,12 +191,19 @@ const AppPlayerBar: FC<IProps> = () => {
           </div>
           <div className="right sprite_player">
             <button className="btn sprite_playbar volume"></button>
-            <button className="btn sprite_playbar loop"></button>
+            <button
+              className="btn sprite_playbar loop"
+              onClick={handleChangePlayMode}
+            ></button>
             <button className="btn sprite_playbar playlist"></button>
           </div>
         </BarOperator>
       </div>
-      <audio ref={audioRef} onTimeUpdate={handleTimeUpdata} />
+      <audio
+        ref={audioRef}
+        onTimeUpdate={handleTimeUpdata}
+        onEnded={handleTimeEnded}
+      />
     </PlayerBarWrpper>
   )
 }
