@@ -1,51 +1,25 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit'
 import { getSongDetail, getSongLyric } from '../app-player-bar/service/player'
 import { ILyricInfo, parseLyric } from '@/utils/parse-lyric'
-import type { IRootState } from '@/store'
 
-//此处state类型IRootState为先前在封装网络请求时候定义的
-export const fetchCurrentSongAction = createAsyncThunk<
-  void,
-  number,
-  { state: IRootState }
->('currentSong', (id: number, { dispatch, getState }) => {
-  //获取歌曲信息
-  //1、查看当前播放歌曲在播放列表中是否存在
-  //获取playSongList
-  const playSongList = getState().player.playSongList
-  const findeIndex = playSongList.findIndex((item) => item.id === id)
-  if (findeIndex === -1) {
-    //没有找到相同的
+export const fetchCurrentSongAction = createAsyncThunk(
+  'currentSong',
+  (id: number, { dispatch }) => {
+    //获取歌曲信息
     getSongDetail(id).then((res) => {
       const song = res.data.songs[0]
       dispatch(changeCurrentSongAction(song))
-      //将song放到currentSong中
-      const newPlaySongList = [...playSongList]
-      newPlaySongList.push(song)
-      dispatch(changeCurrentSongAction(song))
-      dispatch(changePlaySongListAction(newPlaySongList))
-      dispatch(changePlaySongIndexAction(newPlaySongList.length - 1))
     })
-  } else {
-    //找到相同的item
-    const song = playSongList[findeIndex]
-    dispatch(changeCurrentSongAction(song))
-    dispatch(changePlaySongIndexAction(findeIndex))
+
+    getSongLyric(id).then((res) => {
+      const lyricString = res.data.lrc.lyric
+      // 此时获取到的为用换行符分割的长字符串
+      //对其进行格式化后获取到的是元素为对象的数组
+      const lyrics = parseLyric(lyricString)
+      dispatch(changeLyricsAction(lyrics))
+    })
   }
-
-  getSongDetail(id).then((res) => {
-    const song = res.data.songs[0]
-    dispatch(changeCurrentSongAction(song))
-  })
-
-  getSongLyric(id).then((res) => {
-    const lyricString = res.data.lrc.lyric
-    // 此时获取到的为用换行符分割的长字符串
-    //对其进行格式化后获取到的是元素为对象的数组
-    const lyrics = parseLyric(lyricString)
-    dispatch(changeLyricsAction(lyrics))
-  })
-})
+)
 
 interface IPlayerState {
   currentSong: any
@@ -54,7 +28,7 @@ interface IPlayerState {
   //存储准备播放歌曲的数组
   playSongList: any[]
   //当前播放歌曲的索引
-  playSongIndex: number
+  plauSongIndex: number
 }
 
 const initialState: IPlayerState = {
@@ -401,7 +375,7 @@ const initialState: IPlayerState = {
     }
   ],
   //当前播放歌曲的索引
-  playSongIndex: -1
+  plauSongIndex: -1
 }
 
 const playSlice = createSlice({
@@ -417,12 +391,6 @@ const playSlice = createSlice({
     //保存歌词索引
     changeLyricIndexAction(state, { payload }) {
       state.lyricIndex = payload
-    },
-    changePlaySongIndexAction(state, { payload }) {
-      state.playSongIndex = payload
-    },
-    changePlaySongListAction(state, { payload }) {
-      state.playSongList = payload
     }
   }
 })
@@ -431,7 +399,5 @@ export default playSlice.reducer
 export const {
   changeCurrentSongAction,
   changeLyricsAction,
-  changeLyricIndexAction,
-  changePlaySongIndexAction,
-  changePlaySongListAction
+  changeLyricIndexAction
 } = playSlice.actions
