@@ -12,8 +12,8 @@ export const AnchorWrapper = styled.div`
       width: 210px;
       .image {
         img {
-          width: 40px;
-          height: 40px;
+          width: 54px;
+          height: 54px;
         }
       }
 

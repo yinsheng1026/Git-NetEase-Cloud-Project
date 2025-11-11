@@ -19,11 +19,9 @@ const HotAnchor: FC<IProps> = () => {
         {hotRadios.map((item) => {
           return (
             <div className="item" key={item.name}>
-              <img
-                src={getImageSize_right(item.picUrl, 40)}
-                alt=""
-                className="image"
-              />
+              <a className="image">
+                <img src={getImageSize_right(item.picUrl, 40)} alt="" />
+              </a>
               <div className="info">
                 <div className="name">{item.name}</div>
                 <div className="position">{item.position}</div>
