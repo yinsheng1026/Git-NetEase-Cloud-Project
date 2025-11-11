@@ -19,6 +19,7 @@ const TopRanking: FC<IProps> = () => {
     }),
     shallowEqual
   )
+  console.log(rankings)
   return (
     <RankingWrapper>
       {/* 调用先前定义的头部 */}
